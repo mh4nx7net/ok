@@ -1,0 +1,67 @@
+mkdir /root/easy-rsa
+cp -prv /usr/share/doc/openvpn/examples/easy-rsa/2.0 /root/easy-rsa
+cp vars{,.orig}
+EOF vars
+KEY_SIZE=4096
+KEY_COUNTRY="IN"
+KEY_PROVINCE="UP"
+KEY_CITY="Noida"
+KEY_ORG="Home"
+KEY_EMAIL="user@example.net"
+source ./vars
+./clean-all
+./build-ca
+./build-key-server server-name
+./build-dh
+./build-key client-name
+openvpn --genkey --secret /root/easy-rsa/keys/ta.key
+mkdir -p /etc/openvpn/certs
+cp -pv /root/easy-rsa/keys/{ca.{crt,key},server-name.{crt,key},ta.key,dh4096.pem} /etc/openvpn/certs/
+
+EOF server
+script security 3 system
+port 1194
+proto udp
+dev tap
+ca /etc/openvpn/certs/ca.crt
+cert /etc/openvpn/certs/server-name.crt
+key /etc/openvpn/certs/server-name.key
+dh /etc/openvpn/certs/dh4096.pem
+tls-auth /etc/openvpn/certs/ta.key 0
+server 192.168.88.0 255.255.255.0
+ifconfig-pool-persist ipp.txt
+push "redirect-gateway def1 bypass-dhcp"
+push "dhcp-option DNS 8.8.8.8"
+push "dhcp-option DNS 8.8.4.4"
+keepalive 1800 4000
+cipher DES-EDE3-CBC # Triple-DES
+comp-lzo
+max-clients 10
+user nobody
+group nogroup
+persist-key
+persist-tun
+#log openvpn.log
+#status openvpn-status.log
+verb 5
+mute 20
+
+
+EOF client
+script security 3 system
+client
+remote vpn_server_ip
+ca /etc/openvpn/certs/ca.crt
+cert /etc/openvpn/certs/client.crt
+key /etc/openvpn/certs/client.key
+cipher DES-EDE3-CBC
+comp-lzo yes
+dev tap
+proto udp
+tls-auth /etc/openvpn/certs/ta.key 1
+nobind
+auth-nocache
+persist-key
+persist-tun
+user nobody
+group nogroup

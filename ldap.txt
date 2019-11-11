@@ -1,0 +1,49 @@
+dn: ou=people,dc=srv,dc=world
+objectClass: organizationalUnit
+ou: people
+
+dn: ou=groups,dc=srv,dc=world
+objectClass: organizationalUnit
+ou: groups 
+ldapadd -x -D cn=admin,dc=srv,dc=world -W -f base.ldif 
+==================OU==================
+dn: uid=buster,ou=people,dc=srv,dc=world
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+cn: buster
+sn: ubuntu
+userPassword: {SSHA}xxxxxxxxxxxxxxxxx
+loginShell: /bin/bash
+uidNumber: 2000
+gidNumber: 2000
+homeDirectory: /home/buster
+	dn: cn=buster,ou=groups,dc=srv,dc=world
+	objectClass: posixGroup
+	cn: buster
+	gidNumber: 2000
+	memberUid: buster
+ldapadd -x -D cn=admin,dc=srv,dc=world -W -f ldapuser.ldif 
+=================USER=================
+for ((i=1;i<=5;i++));
+do printf	'dn:user'$i' \n
+		 object=user'$i' \n
+		 cn:'200$i' \n
+		 \n';
+done > ldif.ldif
+===============multiple===============
+Set-ExecutionPolicy unrestricted
+EOF user.ps1
+param([string]$i)
+<EOF>
+-Enabled $true -AccountPassword (ConvertTo-SecureString passw =AsPlainText -Force)
+
+EOF user.bat
+set no=1
+:start
+set user=user_space
+set user=%user%%no%
+Powershell -File C:\user.ps1 %user%
+if %no%==50 (goto :eof)
+set /A no=%no%+1
+goto start

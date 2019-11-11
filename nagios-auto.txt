@@ -1,0 +1,21 @@
+apt install nagios4 fcgiwrap apache2
+
+nano /etc/nginx/sites-enabled/nagios
+EOF>>
+auth_basic "nagiosadmin";
+auth_basic_user_file /etc/nagios4/htdigest.users;
+
+root /usr/share/nagios4/htdocs/;
+location /stylesheets{
+	alias /etc/nagios4/stylesheets;
+}
+
+location ~ \.cgi$ {
+	root /usr/lib/cgi-bin/nagios4;
+	rewrite ^/cgi-bin/nagios4/(.*)$ /$1;
+	include /etc/nginx/fastcgi_params;              
+	fastcgi_param AUTH_USER $remote_user;
+	fastcgi_param REMOTE_USER $remote_user;
+	fastcgi_param SCRIPT_FILENAME /usr/lib/cgi-bin/nagios4$fastcgi_script_name;
+	fastcgi_pass unix:/var/run/fcgiwrap.socket;
+}

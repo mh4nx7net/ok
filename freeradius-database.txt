@@ -1,0 +1,16 @@
+install paket [db,radius]
+apt install postgresql postgresql-contrib freeradius freeradius-{postgresql,ldap,utils}
+
+buat db dan user
+su -l postgres
+createuser -dsP radius
+createdb radius -O radius
+
+nano /etc/postgresql/10/main/pg_hba.conf +85
+replace peer-unix with md5
+service postgresql restart
+
+import freeradius db_scheme
+psql -U radius radius < /etc/freeradius/3.0/mods-config/sql/main/postgresql/schema.sql
+nano /etc/freeradius/3.0/mods-available/sql
+

@@ -1,0 +1,11 @@
+apt install mariadb-server <-- server
+apt install mariadb-client php-mysql <-- client
+
+
+nano /etc/mysql/mariadb.conf.d/50-server.conf
+EOF>>
+bind-address=0.0.0.0
+<<EOF
+
+create user 'wordpress'@'%';
+grant all on *.* to 'wordpress'@'%' identified by 'passw';

@@ -1,0 +1,36 @@
+#package install
+apt install postfix dovecot-{imapd,pop3d} roundcube postgresql-client
+apt install php-{sqlite3,xml,intl,gd,ldap,imagick,mail,mail-mime,mdb2,mbstring}
+
+#postfix
+nano /etc/postfix/main.cf
+EOF>> home_mailbox = /Maildir <<EOF
+
+#dovecot
+nano /etc/dovecot/dovecot.conf
+nano /etc/dovecot/conf.d/10-mail.conf
+mail_location = maildir:~/Maildir
+nano /etc/dovecot/conf.d/10-auth.conf
+disable_plaintext_auth = no
+
+#roundcube
+nano /etc/php/$ver/fpm/php.inix
+search date.time = Asia/Jakarta
+
+
+#stuff
+mkdirdir /etc/skel/Maildir
+
+#telnet 25
+mail from: user@host
+rcpt to: user@host
+data
+EOF
+.
+quit
+
+#telnet 110
+user user_space
+pas pass_space
+retr 1
+quit

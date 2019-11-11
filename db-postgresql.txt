@@ -1,0 +1,13 @@
+apt install postgresql php-pgsql
+
+nano /etc/postgres/../postgresql.conf
+
+EOF>>
+listen_address = '*'
+<<EOF
+
+nano /etc/postgres/../pg_hba.conf
+
+EOF>>
+host all all addrtarget/subnet md5
+<<EOF

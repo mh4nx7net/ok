@@ -1,0 +1,8 @@
+ntp	> srv
+ntpdate > clt
+
+//srv dns.dns
+EOF /etc/ntp.conf	pool parent.dns iburst
+			restrict local mask subnet nomodify notrap
+//clt
+ntpdate dns.dns

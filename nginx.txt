@@ -1,0 +1,13 @@
+#ssl
+ssl_certificate /etc/ssl/certs/ssl-cert-snakeoil.pem;
+ssl_certificate_key /etc/ssl/private/ssl-cert-snakeoil.key;
+
+#upstream
+upstream jajal {
+server http://link;
+server http://link;}
+
+location / {proxy_pass http://jajal}
+
+#get alias
+server_name alias1 alias2;

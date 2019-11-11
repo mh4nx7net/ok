@@ -1,0 +1,22 @@
+install paket [radius]
+apt install freeradius
+
+nano /etc/freeradius/$ver/clients.conf
+EOF>>
+client addr.target {
+secret = pass
+}
+<<EOF
+
+nano /etc/freeradius/$ver/users
+EOF>>
+user1 Cleartext-Password := "jajal"
+user2 Cleartext-Password := "jajal"
+<<EOF
+
+#allow log
+nano /etc/freeradius/$ver/radiusd.conf
+
+auth=yes
+auth_badpass=yes
+auth_goodpass=yes

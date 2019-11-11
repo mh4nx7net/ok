@@ -1,0 +1,7 @@
+install easy
+EOF php.ini /easy_workdir
+pgsql
+
+path postgrelibdir
+restart apache2
+virtualconf

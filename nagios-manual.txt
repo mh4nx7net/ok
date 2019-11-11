@@ -1,0 +1,34 @@
+#dep
+install apache2 libapache2-mod-php
+install compiler gcc make
+
+#apache stuff
+enable apache2 cgi,rewrite modules
+nano /etc/apache2/ports.conf
+
+#maintanance
+useradd nagios;usermod -aG www-data nagios
+groupadd nagcmd; usermod -aG nagcmd www-data #for advance webiface control
+tar xvf nagios* ;cd nagios*
+
+#install
+./configure --with-nagios-group=nagiosadmin --with-command-group=nagcmd --with-httpd-conf=/etc/apache2/sites-enabled
+make all; make install; make install-{init,config,commandmode,webconf,groups-users}
+
+#optional
+create htpasswd [opt]
+htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+
+#object parent
+/usr/local/nagios/etc/nagios.cfg
+EOF>> cfg_file=... <<EOF
+#object child
+/usr/local/nagios/etc/object/tmp.cfg
+EOF>>
+define host{use tmpname; name host_space; address addr;}
+define hostgroup{ hostgroup_name name_space; members host_space,..;}
+
+#plugin
+install plugin1st
+cp /usr/lib/nagios/plugins/check_* /usr/local/nagios/libexec
+chown -R nagios:nagios /usr/local/nagios/libexec

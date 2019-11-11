@@ -1,0 +1,33 @@
+//group - limit
+[Security]
+    path = /home/security
+    writable = yes
+    create mode = 0770
+    directory mode = 0770
+    # guest not allowed
+    guest ok = no
+    # allow users only in [security] group
+    valid users = @security
+useradd mantab
+smbpasswd -a mantab
+usermod -aG jal mantab
+
+//windbind
+install winbind libpam-winbind libnss-winbind krb5-config 
+EOF /etc/samba/smb.conf	workgroup = FD3S01
+			password server = fd3s.srv.world
+			realm = SRV.WORLD
+			security = ads
+			idmap config * : range = 16777216-33554431
+			template homedir = /home/%U
+			template shell = /bin/bash
+			winbind use default domain = true
+			winbind offline logon = false
+EOF /etc/nsswitch.conf	passwd:	files systemd winbind
+			group:	files systemd winbind
+			shadow:	files winbind
+EOF /etc/pam.d/common-session session optional pam_mkhomedir.so skel=/etc/skel umask=077
+net ads join -U Administrator
+systemctl restart winbind
+wbinfo -u
+su - serverworld 

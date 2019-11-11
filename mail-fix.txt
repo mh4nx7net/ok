@@ -1,0 +1,25 @@
+EOF /etc/host.conf
+order hosts,bind
+multi on
+
+hostnamectl set-hostname m.d.c
+EOF /etc/hosts
+addr dom aldom
+
+postconf -e 'home_mailbox=Maildir/'
+maincf
+
+dovecot.conf 		listen
+dovecot.10-auth		disable_p no
+			auth_mec = plain login
+dovecot.10-mail		mailloc = ~/maildir
+dovecot.10-master	unix /var../priv/au
+			mode=0666
+			us=pos
+			gr=pos
+
+maildirmake
+EOF /etc/profile
+export MAIL=$HOME/Maildir
+EOF /etc/aliases
+root: test

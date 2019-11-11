@@ -1,0 +1,11 @@
+wget https://wordpress.org/latest.zip
+unzip latest.zip; mv wordpress /var/www/. ; chmod 755 /var/www/wordpress -R
+
+read -p "with pgsql-database? " -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+        wget https://github.com/gmercey/PG4WP/archive/master.zip
+        unzip master.zip; mv PG4WP-master /var/www/wordpress/wp-content/pg4wp
+        cp /var/www/wordpress/wp-content/pg4wp/db.php /var/www/wordpress/wp-content/.
+fi
+echo done

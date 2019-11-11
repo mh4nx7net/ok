@@ -1,0 +1,48 @@
+=======================INT=======================
+;
+; BIND data file for local loopback interface
+;
+$TTL	604800
+@	IN	SOA	ns1.lks.com. root.lks.com. (
+			      2		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;declare multiple ns
+@	IN	NS	ns1.lks.com.
+;@	IN	NS	ns2.lks.com.
+
+;parent
+lks.com.	IN	A	88.88.88.6
+
+;child
+ns1	IN	A	88.88.88.6
+nms	IN	A	88.88.88.6
+mail	IN	A	88.88.88.6
+ldap	IN	A	88.88.88.6
+
+;mx declare
+lks.com.	IN	MX	10	mail.lks.com.
+
+;cname
+ftp	IN	CNAME	lks.com.
+www	IN	CNAME	lks.com.
+
+=======================REV=======================
+;
+; BIND reverse data file for local loopback interface
+;
+$TTL	604800
+@	IN	SOA	ns1.lks.com. root.lks.com. (
+			      1		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;rev multiple ns
+@	IN	NS	ns1.lks.com.
+;88.88.in-addr.arpa		IN	NS	ns2.lks.com.
+
+;just rev who have dif ip
+6.88	IN	PTR	lks.com.

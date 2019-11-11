@@ -1,0 +1,12 @@
+apt -y install realmd sssd sssd-tools adcli krb5-user packagekit samba-common samba-common-bin samba-libs 
+EOF /etc/resolv.conf		nameserver addr
+EOF /etc/pam.d/common-session	session optional pam_mkhomedir.so skel=/etc/skel umask=077
+
+//check addds	realm discover SRV.WORLD
+//join adds	realm join SRV.WORLD
+//cn adds	id FD3S01\\Serverworld 
+//login		su - FD3S01\\Serverworld 
+
+//omit
+EOF /etc/sssd/sssd.conf		use_fully_qualified_names = False
+systemctl restart sssd 

@@ -1,0 +1,25 @@
+[basic]
+package
+net-tools,vlan,curl,git,httpie
+
+[kernel modules]
+echo 8021q >> /etc/modules
+
+[networking]
+uncomment /etc/sysctl.conf ipv4forwarding
+iptables -t nat -A POSTROUTING -j MASQUERADE
+iptables-save > /etc/network/iptables.up.rules
+/etc/network/interfaces
+loopback
+pre-up iptables-restore < /etc/network/iptables.up.rules
+
+[vlan configuration]
+auto ens33.xx
+iface ens33.xx inet static
+address 20.20.20.2/30
+vlan-raw-device ens33
+
+[alias configuration]
+auto ens33:xx
+iface ens33:xx inet static
+address 20.20.20.2/30

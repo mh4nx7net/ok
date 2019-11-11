@@ -1,0 +1,7 @@
+php-{gd,curl,sqlite3,xml}
+
+unzip drupal
+mv drupal /var/www/drupal
+
+cd /var/www/drupal
+php core/scripts/drupal quick-start

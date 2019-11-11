@@ -1,0 +1,6 @@
+source /etc/os-release
+apt install apt-transport-https gnupg
+echo "deb http://deb.frrouting.org/frr $(lsb_release -cs) frr-stable" >> /etc/apt/sources.list
+wget -O- http://deb.frrouting/frr/keys.asc | apt-key add -
+apt update
+apt install frr -y

@@ -1,0 +1,17 @@
+frontend lks.com
+bind *:9999
+mode http
+default_backend backend.lks.com
+acl url_blog path_beg /blog
+use_backend blog-backend if url_blog
+
+backend backend.lks.com
+balance roundrobin
+server lks1 10.10.10.2:80
+server lks2 220.20.20.2:80
+stats enable
+stats auth admin:adminpassword
+stats hide-version
+stats show-node
+stats refresh 60s
+stats uri /haproxy?stats
